@@ -1,0 +1,23 @@
+import { configureStore } from '@reduxjs/toolkit';
+import { api } from './api';
+import inventoryReducer from './inventorySlice';
+
+export const store = configureStore({
+  reducer: {
+    inventory: inventoryReducer,
+    [api.reducerPath]: api.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [api.util.resetApiState.type],
+      },
+    }).concat(api.middleware),
+  devTools: process.env.NODE_ENV !== 'production',
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+
+
